@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>로그인폼</title>
+
+<script src="js/jquery-3.6.1.min.js"></script>
+<script>
+$(document).ready(function(){
+	$('form').on('submit', function(){
+		// 1.아이디 입력란에 admin administrator administration 중 하나 입력 시
+		// role 변수의 값을 admin으로 설정
+		// 세개 중 하나가 아니면 role 변수값을 user로 설정
+		var id = $('#userInput').val();
+		if (id == 'admin' || id == 'administrator' || id == 'administration') {
+			$('#role').attr('value', 'admin');
+		} else {
+			$('#role').attr('value', 'user');
+		}
+		
+		// 2. form action 속성 만들고 속성값으로 'loginjs' 지정
+		$('#inputForm').attr('action', 'loginjs');
+		
+		// 3. 메서드 방식은 POST로 설정
+		//$('#inputForm').attr('method', 'get');
+		$('#inputForm').attr('method', 'post');
+	
+		// --answer--
+		/*
+		// --1--
+		var id = $('input:text').val(); // val() : getter
+		if(id == "admin" || id == "administrator" || id == "administration") {
+			$('input:hidden').val("admin"); // val() : setter
+		} else {
+			$('input:hidden').val("user");
+		}
+		// --2--
+		this.action="loginjs";
+		// --3--
+		this.method="post";
+		*/
+	});
+});
+
+</script>
+
+</head>
+<body>
+
+<h1>로그인하세요</h1>
+<form id="inputForm">
+아이디입력: <input type="text" name="id2" id="userInput">
+암호입력: <input type="password" name="pw">
+<input type="hidden" name="role" id="role">
+<input type="submit" value="로그인">
+</form>
+
+</body>
+</html>

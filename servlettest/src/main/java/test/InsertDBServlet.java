@@ -42,7 +42,8 @@ public class InsertDBServlet extends HttpServlet {
 			return;
 		}
 		// 전화번호 예외처리
-		String pattern = "^010";
+		String pattern = "010\\d{4}\\d{4}";
+		System.out.println(phone);
 		if (!phone.matches(pattern)) {
 			out.println("<h1>전화번호는 010으로 시작해야 합니다</h1>");
 			out.close();
@@ -59,7 +60,7 @@ public class InsertDBServlet extends HttpServlet {
 		
 		String output = "";
 		if (result == 1) {
-			output = "<h1>정상적으로 가입되었습니다.</h1>";
+			output = "<h1>정상적으로 가입되었습니다. <a href='login_db.html'>로그인하기</a></h1></h1>";
 		} else {
 			output = "<h1>회원가입에 실패하였습니다. <a href='insert_db.html'>다시회원가입하기</a></h1>";
 		}

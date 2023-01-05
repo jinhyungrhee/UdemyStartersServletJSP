@@ -92,9 +92,14 @@ public class MemberDAO {
 		
 		try {
 			
-			Class.forName(ConnectionInform.DRIVER_CLASS);
-			con = DriverManager.getConnection
-			(ConnectionInform.JDBC_URL, ConnectionInform.USERNAME, ConnectionInform.PASSWORD);
+//			Class.forName(ConnectionInform.DRIVER_CLASS);
+//			con = DriverManager.getConnection
+//			(ConnectionInform.JDBC_URL, ConnectionInform.USERNAME, ConnectionInform.PASSWORD);
+			
+			Context initContext = new InitialContext(); // context.xml 준비
+			Context envContext = (Context)initContext.lookup("java:/comp/env"); // 자바 연관 설정 정보 찾기 (comp - 자바 객체, env - 환경 설정 정보)
+			DataSource ds = (DataSource)envContext.lookup("jdbc/mydb");
+			con = ds.getConnection();
 			
 			String sql = "select count(*) from member"; // 1행 1열 -> null / 숫자
 			pt = con.prepareStatement(sql);
@@ -108,7 +113,7 @@ public class MemberDAO {
 				count = rs.getInt("count(*)");
 			}
 			
-		} catch (ClassNotFoundException e) {
+		} catch (NamingException e) {
 			System.out.println("해당 드라이버가 발견되지 않습니다");
 		} catch (SQLException e) {
 			System.out.println("연결 정보를 확인하세요");
@@ -237,9 +242,14 @@ public class MemberDAO {
 		
 		try {
 		
-			Class.forName(ConnectionInform.DRIVER_CLASS);
-			con = DriverManager.getConnection
-					(ConnectionInform.JDBC_URL, ConnectionInform.USERNAME, ConnectionInform.PASSWORD);
+//			Class.forName(ConnectionInform.DRIVER_CLASS);
+//			con = DriverManager.getConnection
+//					(ConnectionInform.JDBC_URL, ConnectionInform.USERNAME, ConnectionInform.PASSWORD);
+			
+			Context initContext = new InitialContext(); // context.xml 준비
+			Context envContext = (Context)initContext.lookup("java:/comp/env"); // 자바 연관 설정 정보 찾기 (comp - 자바 객체, env - 환경 설정 정보)
+			DataSource ds = (DataSource)envContext.lookup("jdbc/mydb");
+			con = ds.getConnection();
 			
 			String sql = "update member set pw=ifnull(?, ?), name=ifnull(?, ?), email=ifnull(?, ?), phone=ifnull(?, ?), address=ifnull(?, ?) "
 					+ "where id=?";
@@ -259,7 +269,7 @@ public class MemberDAO {
 			
 			result = pt.executeUpdate();
 			
-		} catch(ClassNotFoundException e) {
+		} catch(NamingException e) {
 			System.out.println("해당 드라이버가 발견되지 않았습니다");
 		} catch(SQLException e) {
 			System.out.println("연결 정보를 확인하세요");
@@ -274,16 +284,22 @@ public class MemberDAO {
 		return result;
 	}
 	
-	void updateMemberAnswer(HashMap<String, String> updateMap) {
+	public int updateMemberAnswer(HashMap<String, String> updateMap) {
 		
 		Connection con = null;
 		PreparedStatement pt = null;
+		int result = 0;
 		
 		try {
 			
-			Class.forName(ConnectionInform.DRIVER_CLASS);
-			con = DriverManager.getConnection
-			(ConnectionInform.JDBC_URL, ConnectionInform.USERNAME, ConnectionInform.PASSWORD);
+//			Class.forName(ConnectionInform.DRIVER_CLASS);
+//			con = DriverManager.getConnection
+//			(ConnectionInform.JDBC_URL, ConnectionInform.USERNAME, ConnectionInform.PASSWORD);
+			
+			Context initContext = new InitialContext(); // context.xml 준비
+			Context envContext = (Context)initContext.lookup("java:/comp/env"); // 자바 연관 설정 정보 찾기 (comp - 자바 객체, env - 환경 설정 정보)
+			DataSource ds = (DataSource)envContext.lookup("jdbc/mydb");
+			con = ds.getConnection();
 			
 			// 자주 변하는 String에는 StringBuffer 사용
 			StringBuffer sql = new StringBuffer(); // 16문자버터 + ...
@@ -301,10 +317,10 @@ public class MemberDAO {
 			
 			pt = con.prepareStatement(sql.toString());
 			pt.setString(1, updateMap.get("id"));
-			pt.executeUpdate();
+			result = pt.executeUpdate();
 			
 			
-		} catch (ClassNotFoundException e) {
+		} catch (NamingException e) {
 			System.out.println("해당 드라이버가 발견되지 않습니다");
 		} catch (SQLException e) {
 			System.out.println("연결 정보를 확인하세요");
@@ -314,19 +330,28 @@ public class MemberDAO {
 				con.close();
 			} catch(SQLException e) {}
 		}		
+		
+		return result;
 	}
 	
 	
-	void deleteMember(String id) {
+	public int deleteMember(String id) {
 		
 		Connection con = null;
 		PreparedStatement pt = null;
+		int insertCount = 0;
+		int deleteCount = 0;
 		
 		try {
 			
-			Class.forName(ConnectionInform.DRIVER_CLASS);
-			con = DriverManager.getConnection
-			(ConnectionInform.JDBC_URL, ConnectionInform.USERNAME, ConnectionInform.PASSWORD);
+//			Class.forName(ConnectionInform.DRIVER_CLASS);
+//			con = DriverManager.getConnection
+//			(ConnectionInform.JDBC_URL, ConnectionInform.USERNAME, ConnectionInform.PASSWORD);
+			
+			Context initContext = new InitialContext(); // context.xml 준비
+			Context envContext = (Context)initContext.lookup("java:/comp/env"); // 자바 연관 설정 정보 찾기 (comp - 자바 객체, env - 환경 설정 정보)
+			DataSource ds = (DataSource)envContext.lookup("jdbc/mydb");
+			con = ds.getConnection();
 	
 			// con 객체에서 트랜잭션 처리 설정 -> 하나의 트랜잭션으로 묶어서 처리!
 			// [1] : auto-commit : false
@@ -339,7 +364,7 @@ public class MemberDAO {
 			// --- 
 			pt = con.prepareStatement(insertSql);
 			pt.setString(1, id);	
-			int insertCount = pt.executeUpdate();
+			insertCount = pt.executeUpdate();
 			/// ---
 			
 			// 웹 서버가 회원탈퇴요청 처리중 - lock
@@ -348,7 +373,7 @@ public class MemberDAO {
 			// --- 
 			pt = con.prepareStatement(deleteSql);
 			pt.setString(1, id);	
-			int deleteCount = pt.executeUpdate(); // 예외발생
+			deleteCount = pt.executeUpdate(); // 예외발생
 			/// ---
 			// [2] : SQL문이 둘 다 성공했ㅡ을 때만 commit, 아니면 rollback
 			con.commit(); 
@@ -365,6 +390,8 @@ public class MemberDAO {
 				pt.close();
 				con.close();
 			} catch(SQLException e) {}
-		}		
+		}
+		return deleteCount;
+		
 	}
 }

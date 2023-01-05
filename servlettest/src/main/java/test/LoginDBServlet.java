@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.MemberDAO;
 import dto.MemberDTO;
@@ -17,6 +18,8 @@ public class LoginDBServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
 		// 1. 요청 정보 추출
 		//request.setCharacterEncoding("utf-8"); // 한글일 경우 -> 필터가 변경하도록 설정
 		String id = request.getParameter("id");
@@ -31,6 +34,10 @@ public class LoginDBServlet extends HttpServlet {
 			out.close();
 		}
 		
+		// [세션] 사용
+		HttpSession session = request.getSession();
+		session.setAttribute("id", id);
+		
 		
 		// 2. 로그인 처리 - jdbc
 		MemberDAO dao = new MemberDAO();
@@ -44,7 +51,9 @@ public class LoginDBServlet extends HttpServlet {
 		 * */
 		String result = "";
 		if (dto != null && dto.getPw() != null) {
-			result = "<h1>" + id + " 회원님 정상 로그인되었습니다.</h1>";
+			result = "<h1>" + id + " 회원님 정상 로그인되었습니다.</h1></br>"
+					+ "<form action='/servlettest/updatedb' method='get'><input type=submit value='회원정보수정'></form>"
+					+ "<form action='/servlettest/deletedb' method='post'><input type=submit value='회원탈퇴'></form>";
 		}
 		else if(dto != null && dto.getPw() == null) {
 			result = "<h1>" + id + " 회원님으로서 인증되지 않았습니다. "

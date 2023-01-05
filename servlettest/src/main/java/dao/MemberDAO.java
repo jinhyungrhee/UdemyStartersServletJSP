@@ -121,7 +121,7 @@ public class MemberDAO {
 		return count;
 	}
 	
-	ArrayList<MemberDTO> getMemberList(int currentPage, int memberPerPage) {
+	public ArrayList<MemberDTO> getMemberList(int currentPage, int memberPerPage) {
 		
 		Connection con = null;
 		PreparedStatement pt = null;
@@ -131,9 +131,11 @@ public class MemberDAO {
 		// currPage : 1 ->  range : (currPage - 1)*3 + 1 ~ (currPage - 1)*3 + 3		
 		try {
 			
-			Class.forName(ConnectionInform.DRIVER_CLASS);
-			con = DriverManager.getConnection
-			(ConnectionInform.JDBC_URL, ConnectionInform.USERNAME, ConnectionInform.PASSWORD);
+			Context initContext = new InitialContext(); // context.xml 준비
+			Context envContext = (Context)initContext.lookup("java:/comp/env"); // 자바 연관 설정 정보 찾기 (comp - 자바 객체, env - 환경 설정 정보)
+			DataSource ds = (DataSource)envContext.lookup("jdbc/mydb");
+			// connection pool 하나 빌려오기
+			con = ds.getConnection();
 			
 			String sql = "select id, insert(pw, 2, char_length(pw)-1, repeat('*', char_length(pw)-1)) as pw,"
 					+ " name, indate from member";
@@ -157,7 +159,7 @@ public class MemberDAO {
 				}
 			}
 			
-		} catch (ClassNotFoundException e) {
+		} catch (NamingException e) {
 			System.out.println("해당 드라이버가 발견되지 않습니다");
 		} catch (SQLException e) {
 			System.out.println("연결 정보를 확인하세요");
@@ -178,13 +180,6 @@ public class MemberDAO {
 		MemberDTO dto = null;
 		
 		try {
-			
-			// ConnectionPool 사용
-			/*
-			 * Class.forName(ConnectionInform.DRIVER_CLASS); con =
-			 * DriverManager.getConnection (ConnectionInform.JDBC_URL,
-			 * ConnectionInform.USERNAME, ConnectionInform.PASSWORD);
-			 */
 			
 			// default 문장
 			Context initContext = new InitialContext(); // context.xml 준비

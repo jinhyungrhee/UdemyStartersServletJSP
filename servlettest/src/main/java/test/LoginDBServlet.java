@@ -18,7 +18,7 @@ public class LoginDBServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 1. 요청 정보 추출
-		request.setCharacterEncoding("utf-8"); // 한글일 경우
+		//request.setCharacterEncoding("utf-8"); // 한글일 경우 -> 필터가 변경하도록 설정
 		String id = request.getParameter("id");
 		String pw = request.getParameter("pw");
 		// 응답 준비

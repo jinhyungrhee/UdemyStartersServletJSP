@@ -4,6 +4,8 @@ package dto;
 // 다른 클래스에서 사용하도록 public setter / getter 메서드 필요
 public class MemberDTO {
 	
+	// html form(= name 속성값 == parameter명) 입력 -- dto(변수명) -- db table(컬럼명)
+	
 	String id, pw, name, email, phone, address, indate;
 	// 자바      - int, double, date, String 
 	// maria db - int, double, datetime, char/varchar 
@@ -17,6 +19,16 @@ public class MemberDTO {
 		this.id = id;
 		this.name = name;
 		this.indate = indate;
+	}
+	
+	public MemberDTO(String id, String pw, String name, String email, String phone, String address) {
+		super();
+		this.id = id;
+		this.pw = pw;
+		this.name = name;
+		this.email = email;
+		this.phone = phone;
+		this.address = address;
 	}
 
 	public MemberDTO(String id, String pw, String name, String email, String phone, String address, String indate) {

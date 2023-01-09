@@ -35,7 +35,7 @@ public class JSPTestServlet extends HttpServlet {
 			}
 			
 			request.setAttribute("result", list);
-			RequestDispatcher rd = request.getRequestDispatcher("/member.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("/memberlist.jsp");
 			rd.forward(request, response);
 			
 		}

@@ -23,7 +23,6 @@ public class MemberDAO {
 	public int insertMember(MemberDTO dto) {
 		
 		
-		
 		// \ PrepareStatment 사용
 		
 		Connection con = null;
@@ -142,7 +141,7 @@ public class MemberDAO {
 			// connection pool 하나 빌려오기
 			con = ds.getConnection();
 			
-			String sql = "select id, insert(pw, 2, char_length(pw)-1, repeat('*', char_length(pw)-1)) as pw,"
+			String sql = "select id, address, insert(pw, 2, char_length(pw)-1, repeat('*', char_length(pw)-1)) as pw,"
 					+ " name, indate from member";
 			// **또 다른 방법**
 			//String sql = "select id, name from member order by indate limit ?, ?";
@@ -160,6 +159,7 @@ public class MemberDAO {
 				if (rs.getRow() >= range+1 && rs.getRow() <= range+memberPerPage) {
 					MemberDTO dto = new MemberDTO(rs.getString("id"), rs.getString("name"), rs.getString("indate"));
 					dto.setPw(rs.getString("pw"));
+					dto.setAddress(rs.getString("address"));
 					list.add(dto);
 				}
 			}

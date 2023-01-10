@@ -25,6 +25,7 @@ public class MemberServlet extends HttpServlet {
 		
 		if(menu.equals("memberlist")) {
 			
+			
 			int page = Integer.parseInt(request.getParameter("page"));
 			MemberDAO dao = new MemberDAO();
 			ArrayList<MemberDTO> list = dao.getMemberList(page, 4);
